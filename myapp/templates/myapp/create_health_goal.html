@@ -1,0 +1,126 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Create Health Goal - Health Goal Planner{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="page-title text-center mb-4">
+            <i class="fas fa-bullseye"></i> Create Your Health Goal
+        </h1>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-heartbeat"></i> Health Goal Information
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.user_name.id_for_label }}" class="form-label">
+                            <i class="fas fa-user"></i> Your Name
+                        </label>
+                        {{ form.user_name }}
+                        {% if form.user_name.errors %}
+                            <div class="alert alert-danger small mt-2">{{ form.user_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.goal.id_for_label }}" class="form-label">
+                                    <i class="fas fa-target"></i> Health Goal
+                                </label>
+                                {{ form.goal }}
+                                {% if form.goal.errors %}
+                                    <div class="alert alert-danger small mt-2">{{ form.goal.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.diet_type.id_for_label }}" class="form-label">
+                                    <i class="fas fa-leaf"></i> Diet Type
+                                </label>
+                                {{ form.diet_type }}
+                                {% if form.diet_type.errors %}
+                                    <div class="alert alert-danger small mt-2">{{ form.diet_type.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.daily_calories.id_for_label }}" class="form-label">
+                            <i class="fas fa-fire"></i> Daily Calorie Target
+                        </label>
+                        <div class="input-group">
+                            {{ form.daily_calories }}
+                            <span class="input-group-text">kcal</span>
+                        </div>
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-info-circle"></i> 
+                            Recommended ranges: 1200-1500 (weight loss), 2000-2500 (maintenance), 2500-3500 (muscle gain)
+                        </small>
+                        {% if form.daily_calories.errors %}
+                            <div class="alert alert-danger small mt-2">{{ form.daily_calories.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.allergies.id_for_label }}" class="form-label">
+                            <i class="fas fa-exclamation-triangle"></i> Food Allergies
+                        </label>
+                        {{ form.allergies }}
+                        <small class="text-muted d-block mt-1">Enter allergies separated by commas (e.g., peanuts, shellfish, dairy)</small>
+                        {% if form.allergies.errors %}
+                            <div class="alert alert-danger small mt-2">{{ form.allergies.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.dislikes.id_for_label }}" class="form-label">
+                            <i class="fas fa-ban"></i> Foods You Dislike
+                        </label>
+                        {{ form.dislikes }}
+                        <small class="text-muted d-block mt-1">Enter foods you don't like separated by commas (e.g., spinach, mushrooms, beets)</small>
+                        {% if form.dislikes.errors %}
+                            <div class="alert alert-danger small mt-2">{{ form.dislikes.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-magic"></i> Generate My 7-Day Meal Plan
+                        </button>
+                        <a href="{% url 'myapp:dashboard' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-lightbulb" style="color: #f6ad55;"></i> Tip</h5>
+                        <p class="small mb-0">Our AI will create a personalized 7-day meal plan based on your goals, dietary preferences, and restrictions!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-check-circle" style="color: #48bb78;"></i> What You'll Get</h5>
+                        <p class="small mb-0">Complete meal plan, detailed recipes, and an organized grocery list by category!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

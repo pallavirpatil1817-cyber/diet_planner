@@ -1,0 +1,100 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Dashboard - Health Goal Planner{% endblock %}
+
+{% block content %}
+<h1 class="page-title text-center">
+    <i class="fas fa-chart-line"></i> Your Health Dashboard
+</h1>
+
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-bullseye" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                <h5 class="card-title">Active Goals</h5>
+                <h2 style="color: var(--primary);">{{ health_goals.count }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-calendar-alt" style="font-size: 2.5rem; color: var(--secondary); margin-bottom: 1rem;"></i>
+                <h5 class="card-title">Meal Plans</h5>
+                <h2 style="color: var(--secondary);">{{ meal_plans.count }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-utensils" style="font-size: 2.5rem; color: var(--warning); margin-bottom: 1rem;"></i>
+                <h5 class="card-title">Available Recipes</h5>
+                <h2 style="color: var(--warning);">75+</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <a href="{% url 'myapp:create_health_goal' %}" class="btn btn-primary btn-lg w-100">
+            <i class="fas fa-plus-circle"></i> Create New Health Goal
+        </a>
+    </div>
+</div>
+
+{% if health_goals %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4" style="color: white;">
+            <i class="fas fa-heart"></i> Recent Health Goals
+        </h2>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    {% for goal in health_goals %}
+    <div class="goal-card">
+        <div class="goal-type">
+            {{ goal.get_goal_display }}
+        </div>
+        <h5>{{ goal.user_name }}</h5>
+        <div style="margin-bottom: 1rem;">
+            <small class="text-muted">
+                <i class="fas fa-leaf"></i> {{ goal.get_diet_type_display }}
+            </small>
+            <br>
+            <small class="text-muted">
+                <i class="fas fa-fire"></i> {{ goal.daily_calories }} calories/day
+            </small>
+        </div>
+        
+        {% if goal.mealplan_set.exists %}
+            {% with meal_plan=goal.mealplan_set.first %}
+            <div class="btn-group w-100" role="group">
+                <a href="{% url 'myapp:view_meal_plan' meal_plan.pk %}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-calendar"></i> Meal Plan
+                </a>
+                <a href="{% url 'myapp:view_grocery_list' meal_plan.pk %}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-shopping-cart"></i> Grocery
+                </a>
+            </div>
+            {% endwith %}
+        {% else %}
+            <p class="text-muted small">No meal plan yet</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card text-center">
+    <div class="card-body" style="padding: 3rem;">
+        <i class="fas fa-smile-wink" style="font-size: 4rem; color: var(--primary); opacity: 0.5; margin-bottom: 1rem;"></i>
+        <h5>No health goals yet!</h5>
+        <p class="text-muted">Start by creating your first health goal to generate a personalized meal plan.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

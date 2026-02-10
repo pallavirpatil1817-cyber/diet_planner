@@ -1,0 +1,96 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Recipes - Health Goal Planner{% endblock %}
+
+{% block content %}
+<h1 class="page-title text-center mb-4">
+    <i class="fas fa-book"></i> Recipe Collection
+</h1>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="btn-group w-100 flex-wrap" role="group">
+            <a href="{% url 'myapp:recipe_list' %}" class="btn btn-primary">
+                All Recipes
+            </a>
+            {% for value, label in meal_types %}
+            <a href="?meal_type={{ value }}" class="btn btn-outline-primary">
+                {{ label }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% for recipe in recipes %}
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="recipe-card">
+            <div class="recipe-header">
+                <div>
+                    <span class="badge bg-light text-dark" style="margin-right: 0.5rem;">{{ recipe.get_meal_type_display }}</span>
+                </div>
+                <div class="recipe-title">{{ recipe.name }}</div>
+            </div>
+            <div class="recipe-body">
+                <p class="small text-muted">{{ recipe.description|truncatewords:15 }}</p>
+                
+                <div class="recipe-meta">
+                    <div class="recipe-meta-item">
+                        <i class="fas fa-fire" style="color: var(--danger);"></i>
+                        <span>{{ recipe.calories }} kcal</span>
+                    </div>
+                    <div class="recipe-meta-item">
+                        <i class="fas fa-clock" style="color: var(--warning);"></i>
+                        <span>{{ recipe.prep_time_min }} min</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem; margin-bottom: 1rem;">
+                    <small class="text-muted d-block mb-2">Nutrition (per serving):</small>
+                    <span class="nutrition-badge">
+                        <i class="fas fa-dumbbell"></i> P: {{ recipe.protein_g }}g
+                    </span>
+                    <span class="nutrition-badge">
+                        <i class="fas fa-bread-slice"></i> C: {{ recipe.carbs_g }}g
+                    </span>
+                    <span class="nutrition-badge">
+                        <i class="fas fa-droplet"></i> F: {{ recipe.fat_g }}g
+                    </span>
+                </div>
+
+                {% if recipe.diet_types %}
+                <div style="margin-bottom: 1rem;">
+                    {% for diet in recipe.diet_types.split|slice:":3" %}
+                    <span class="badge bg-success">{{ diet|title }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <a href="{% url 'myapp:recipe_detail' recipe.pk %}" class="btn btn-primary btn-sm w-100">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card text-center">
+            <div class="card-body" style="padding: 3rem;">
+                <i class="fas fa-inbox" style="font-size: 4rem; color: var(--primary); opacity: 0.5; margin-bottom: 1rem;"></i>
+                <h5>No recipes found</h5>
+                <p class="text-muted">Try a different filter or check back later!</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{% url 'myapp:dashboard' %}" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

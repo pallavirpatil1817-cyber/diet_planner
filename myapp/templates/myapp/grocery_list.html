@@ -1,0 +1,72 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Grocery List - Health Goal Planner{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <h1 class="page-title">
+            <i class="fas fa-shopping-cart"></i> Grocery List
+        </h1>
+        <p class="text-white">
+            <i class="fas fa-user"></i> {{ meal_plan.health_goal.user_name }} | 
+            <i class="fas fa-calendar"></i> Starting {{ meal_plan.start_date }}
+        </p>
+    </div>
+    <div class="col-lg-4 text-white text-lg-end">
+        <div class="card bg-dark">
+            <div class="card-body text-center">
+                <h5>Total Est. Cost</h5>
+                <h2>${{ total_price|floatformat:2 }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for category, items in items_by_category.items %}
+<div class="grocery-category">
+    <h4 class="grocery-category-title">
+        <i class="fas fa-tag"></i> {{ category }}
+    </h4>
+    
+    {% for item in items %}
+    <div class="grocery-item {% if item.purchased %}purchased{% endif %}">
+        <form method="post" action="{% url 'myapp:mark_grocery_purchased' item.pk %}" style="display: inline;" onsubmit="this.submit(); return false;">
+            {% csrf_token %}
+            <input type="checkbox" class="grocery-checkbox" {% if item.purchased %}checked{% endif %} onchange="this.form.submit();">
+        </form>
+        
+        <span class="item-name">{{ item.name }}</span>
+        <span class="item-quantity">{{ item.quantity }}</span>
+        {% if item.estimated_price > 0 %}
+            <span class="badge bg-info">${{ item.estimated_price|floatformat:2 }}</span>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-lightbulb" style="color: #f6ad55;"></i> Shopping Tips</h5>
+                <ul class="small mb-0">
+                    <li>Check the boxes as you shop to keep track of what you've purchased</li>
+                    <li>Buy items in season for better prices and quality</li>
+                    <li>Consider batch cooking and freezing meals for busy days</li>
+                    <li>Store fresh vegetables properly to maximize freshness</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-12">
+        <a href="{% url 'myapp:view_meal_plan' meal_plan.pk %}" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left"></i> Back to Meal Plan
+        </a>
+    </div>
+</div>
+{% endblock %}

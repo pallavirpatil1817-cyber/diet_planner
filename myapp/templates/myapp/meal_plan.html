@@ -1,0 +1,143 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Meal Plan - Health Goal Planner{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <h1 class="page-title">
+            <i class="fas fa-calendar-alt"></i> 7-Day Meal Plan
+        </h1>
+        <p class="text-white">
+            <i class="fas fa-user"></i> {{ health_goal.user_name }} | 
+            <i class="fas fa-target"></i> {{ health_goal.get_goal_display }} | 
+            <i class="fas fa-leaf"></i> {{ health_goal.get_diet_type_display }}
+        </p>
+    </div>
+    <div class="col-lg-4 text-white text-lg-end">
+        <a href="{% url 'myapp:view_grocery_list' meal_plan.pk %}" class="btn btn-light">
+            <i class="fas fa-shopping-cart"></i> View Grocery List
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    {% for daily_meal in daily_meals %}
+    <div class="col-lg-12">
+        <div class="day-card">
+            <h3 style="color: var(--primary); margin-bottom: 1.5rem;">
+                <i class="fas fa-sun"></i> Day {{ daily_meal.day_number }}
+                <span class="badge badge-health" style="float: right;">
+                    {{ daily_meal.get_total_calories }} kcal
+                </span>
+            </h3>
+
+            <div class="row">
+                <div class="col-md-6 col-lg-3">
+                    <div class="meal-item">
+                        <div class="meal-label">
+                            <i class="fas fa-sun"></i> Breakfast
+                        </div>
+                        {% if daily_meal.breakfast %}
+                            <a href="{% url 'myapp:recipe_detail' daily_meal.breakfast.pk %}" class="meal-name" style="text-decoration: none;">
+                                {{ daily_meal.breakfast.name }}
+                            </a>
+                            <div class="meal-meta">
+                                <i class="fas fa-fire"></i> {{ daily_meal.breakfast.calories }} kcal
+                                <br>
+                                <i class="fas fa-clock"></i> {{ daily_meal.breakfast.prep_time_min }} min
+                            </div>
+                        {% else %}
+                            <p class="text-muted small">No recipe assigned</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="meal-item">
+                        <div class="meal-label">
+                            <i class="fas fa-cloud-sun"></i> Lunch
+                        </div>
+                        {% if daily_meal.lunch %}
+                            <a href="{% url 'myapp:recipe_detail' daily_meal.lunch.pk %}" class="meal-name" style="text-decoration: none;">
+                                {{ daily_meal.lunch.name }}
+                            </a>
+                            <div class="meal-meta">
+                                <i class="fas fa-fire"></i> {{ daily_meal.lunch.calories }} kcal
+                                <br>
+                                <i class="fas fa-clock"></i> {{ daily_meal.lunch.prep_time_min }} min
+                            </div>
+                        {% else %}
+                            <p class="text-muted small">No recipe assigned</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="meal-item">
+                        <div class="meal-label">
+                            <i class="fas fa-moon"></i> Dinner
+                        </div>
+                        {% if daily_meal.dinner %}
+                            <a href="{% url 'myapp:recipe_detail' daily_meal.dinner.pk %}" class="meal-name" style="text-decoration: none;">
+                                {{ daily_meal.dinner.name }}
+                            </a>
+                            <div class="meal-meta">
+                                <i class="fas fa-fire"></i> {{ daily_meal.dinner.calories }} kcal
+                                <br>
+                                <i class="fas fa-clock"></i> {{ daily_meal.dinner.prep_time_min }} min
+                            </div>
+                        {% else %}
+                            <p class="text-muted small">No recipe assigned</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="meal-item">
+                        <div class="meal-label">
+                            <i class="fas fa-cookie"></i> Snack
+                        </div>
+                        {% if daily_meal.snack %}
+                            <a href="{% url 'myapp:recipe_detail' daily_meal.snack.pk %}" class="meal-name" style="text-decoration: none;">
+                                {{ daily_meal.snack.name }}
+                            </a>
+                            <div class="meal-meta">
+                                <i class="fas fa-fire"></i> {{ daily_meal.snack.calories }} kcal
+                                <br>
+                                <i class="fas fa-clock"></i> {{ daily_meal.snack.prep_time_min }} min
+                            </div>
+                        {% else %}
+                            <p class="text-muted small">No recipe assigned</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 pt-3 border-top">
+                <strong>Daily Nutrition:</strong>
+                {% with nutrition=daily_meal.get_total_nutrition %}
+                <span class="nutrition-badge">
+                    <i class="fas fa-dumbbell"></i> Protein: {{ nutrition.protein|floatformat:1 }}g
+                </span>
+                <span class="nutrition-badge">
+                    <i class="fas fa-bread-slice"></i> Carbs: {{ nutrition.carbs|floatformat:1 }}g
+                </span>
+                <span class="nutrition-badge">
+                    <i class="fas fa-droplet"></i> Fat: {{ nutrition.fat|floatformat:1 }}g
+                </span>
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{% url 'myapp:dashboard' %}" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

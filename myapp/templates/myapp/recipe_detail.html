@@ -1,0 +1,151 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}{{ recipe.name }} - Health Goal Planner{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <h1 class="page-title">
+            <i class="fas fa-utensils"></i> {{ recipe.name }}
+        </h1>
+    </div>
+    <div class="col-lg-4 text-white text-lg-end">
+        <span class="badge badge-health" style="font-size: 1.1rem; padding: 0.75rem 1.25rem;">
+            {{ recipe.get_meal_type_display }}
+        </span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-info-circle"></i> About This Recipe
+            </div>
+            <div class="card-body">
+                <p>{{ recipe.description }}</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div style="font-size: 2.5rem; color: var(--danger); font-weight: 700;">{{ recipe.calories }}</div>
+                            <p class="text-muted">Calories</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div style="font-size: 2.5rem; color: var(--primary); font-weight: 700;">{{ recipe.prep_time_min }}</div>
+                            <p class="text-muted">Minutes to Cook</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div style="font-size: 1.5rem; color: var(--secondary); font-weight: 700;">
+                                <i class="fas fa-dumbbell"></i> <i class="fas fa-bread-slice"></i> <i class="fas fa-droplet"></i>
+                            </div>
+                            <p class="text-muted">Balanced</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-pie"></i> Nutrition (Per Serving)
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4 mb-3">
+                        <div class="nutrition-badge" style="display: block; padding: 1rem; background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%); color: white; font-size: 1rem;">
+                            <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">{{ recipe.carbs_g }}</div>
+                            <div>Carbohydrates (g)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="nutrition-badge" style="display: block; padding: 1rem; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: white; font-size: 1rem;">
+                            <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">{{ recipe.protein_g }}</div>
+                            <div>Protein (g)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="nutrition-badge" style="display: block; padding: 1rem; background: linear-gradient(135deg, #51cf66 0%, #40c057 100%); color: white; font-size: 1rem;">
+                            <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">{{ recipe.fat_g }}</div>
+                            <div>Fat (g)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-list"></i> Ingredients
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for ingredient in ingredients %}
+                    <li class="list-group-item">
+                        <i class="fas fa-check" style="color: var(--success); margin-right: 0.5rem;"></i>
+                        {{ ingredient }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chef-hat"></i> Instructions
+            </div>
+            <div class="card-body">
+                <div style="line-height: 1.8; white-space: pre-wrap;">{{ recipe.instructions }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card sticky-top" style="top: 2rem;">
+            <div class="card-header">
+                <i class="fas fa-lightbulb"></i> Tips
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6><i class="fas fa-hourglass-start" style="color: var(--warning);"></i> Prep Time</h6>
+                    <p class="mb-0">{{ recipe.prep_time_min }} minutes</p>
+                </div>
+                <div class="mb-3">
+                    <h6><i class="fas fa-book" style="color: var(--primary);"></i> Meal Type</h6>
+                    <p class="mb-0">{{ recipe.get_meal_type_display }}</p>
+                </div>
+                {% if recipe.diet_types %}
+                <div class="mb-3">
+                    <h6><i class="fas fa-leaf" style="color: var(--success);"></i> Diets</h6>
+                    <p class="mb-0">
+                        {% for diet in recipe.diet_types.split %}
+                        <span class="badge bg-success">{{ diet|title }}</span>
+                        {% endfor %}
+                    </p>
+                </div>
+                {% endif %}
+                <div class="mt-4">
+                    <h6><i class="fas fa-star" style="color: #f6ad55;"></i> Pro Tips</h6>
+                    <ul class="small mb-0">
+                        <li>Prep ingredients the night before to save time</li>
+                        <li>Use fresh, quality ingredients for best taste</li>
+                        <li>Follow cooking times for optimal results</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{% url 'myapp:recipe_list' %}" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left"></i> Back to Recipes
+        </a>
+    </div>
+</div>
+{% endblock %}
